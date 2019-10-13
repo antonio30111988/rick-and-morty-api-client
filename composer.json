@@ -1,0 +1,72 @@
+{
+  "name": "antonio88/rick-and-morty-api-client",
+  "description": "Rick And Morty PHP REST API Client",
+  "keywords": [
+    "service",
+    "webservice",
+    "rest",
+    "graphql"
+  ],
+  "license": "mit",
+  "type": "project",
+  "support": {
+    "email": "antonio.lolic88@gmail.com",
+    "source": "https://github.com/antonio30111988/rick-and-morty-api-client.git"
+  },
+  "authors": [
+    {
+      "name": "Antonio Lolić",
+      "email": "antonio.lolic@typeqast.com",
+      "homepage": "https://www.typeqast.com",
+      "role": "Senior PHP Fullstack Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.1.2",
+    "guzzlehttp/guzzle": "^6.3",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "illuminate/http": "^6.0",
+    "illuminate/support": "^6.0",
+    "illuminate/routing": "^6.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "3.0.x-dev",
+    "squizlabs/php_codesniffer": "3.4.2",
+    "fzaninotto/faker": "^1.4",
+    "mockery/mockery": "^1.0",
+    "phpunit/phpunit": "^7.0"
+  },
+  "autoload": {
+    "classmap": [
+    ],
+    "psr-4": {
+      "RickAndMortyApiClient\\": "src/"
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "RickAndMortyApiClient\\Test\\": "tests"
+      }
+    },
+    "files": [
+      "src/RickAndMortyApiClient/helpers.php"
+    ]
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RickAndMortyApiClient\\RickAndMortyApiClientServiceProvider"
+      ]
+    }
+  }
+}
