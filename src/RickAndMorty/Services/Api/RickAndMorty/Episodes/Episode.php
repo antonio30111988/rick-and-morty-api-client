@@ -2,14 +2,21 @@
 
 namespace RickAndMortyApiClient\Services\Api\RickAndMorty\Episodes;
 
-use Carbon\Carbon;
-use stdClass;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Filtering\ApiFilterableService;
 use RickAndMortyApiClient\Contracts\Api\ApiModel;
 use RickAndMortyApiClient\Services\Api\ApiModelTrait;
+use RickAndMortyApiClient\Services\Api\RickAndMorty\Characters\Character;
 
-class Episode implements ApiModel
+class Episode extends ApiFilterableService implements ApiModel
 {
     use ApiModelTrait;
+
+    public const ENTITY_NAME = 'episode';
+
+    public const FILTERABLE_ATTRIBUTES  = [
+        'name',
+        'episode'
+    ];
 
     /**
      * @var int
@@ -22,7 +29,7 @@ class Episode implements ApiModel
     /**
      * @var string
      */
-    private $air_date;
+    private $airDate;
     /**
      * @var string
      */
@@ -77,15 +84,15 @@ class Episode implements ApiModel
      */
     public function getAirDate(): string
     {
-        return $this->air_date;
+        return $this->airDate;
     }
 
     /**
-     * @param string $air_date
+     * @param string $airDate
      */
-    public function setAirDate(string $air_date): void
+    public function setAirDate(string $airDate): void
     {
-        $this->air_date = $air_date;
+        $this->airDate = $airDate;
     }
 
     /**
@@ -150,5 +157,13 @@ class Episode implements ApiModel
     public function setCreated(string $created): void
     {
         $this->created = $created;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCharacterIds(): array
+    {
+        return $this->extractIdsFromModelLink($this->getCharacters(), Character::ENTITY_NAME);
     }
 }

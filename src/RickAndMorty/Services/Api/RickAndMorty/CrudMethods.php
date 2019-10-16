@@ -3,51 +3,48 @@
 namespace RickAndMortyApiClient\Services\Api\RickAndMorty;
 
 use Illuminate\Support\Collection;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Filtering\FilterApiTrait;
 use RickAndMortyApiClient\Services\Api\Exception\ApiConnectionException;
 use RickAndMortyApiClient\Services\Api\Exception\ApiEndpointNotFoundException;
 use RickAndMortyApiClient\Services\Api\Exception\ApiInvalidRequestException;
 
 trait CrudMethods
 {
+    use FilterApiTrait;
+
     /**
-     * @param string|null $token
-     * @param array       $with
-     * @param int         $limit
-     * @param string      $sort
-     *
+     * @param array|null $filterData
      * @return Collection
      * @throws ApiConnectionException
      * @throws ApiEndpointNotFoundException
      * @throws ApiInvalidRequestException
      */
-    public function all(?string $token = null, array $with = [], int $limit = 0, string $sort = ''): Collection
+    public function all(?array $filterData = null): Collection
     {
-        $queryString = '/?limit=' . $limit . '&sort=' . $sort . ($with ? '&with[]=' . implode(',', $with) : '');
+        $this->validateFiltersForModel($filterData);
+        $queryString = $this->getQueryString($filterData);
 
         $this->setRequest($this->basePath . $queryString);
-        $this->setHeaders([
-            'token' => $token,
-        ]);
-        return $this->buildFromArray($this->get());
+        $this->setHeaders([]);
+        return $this->buildFromArray($this->get()->results);
     }
 
     /**
-     * @param string|null $token
-     * @param int         $id
-     * @param array       $included
-     *
+     * @param int $id
+     * @param array|null $filterData
      * @return mixed
      * @throws ApiConnectionException
      * @throws ApiEndpointNotFoundException
      * @throws ApiInvalidRequestException
      */
-    public function show(?string $token = null, int $id, array $included = [])
+    public function show(int $id, ?array $filterData = null)
     {
-        $queryString = $included ? '?included=' . implode(',', $included) : '';
+        $this->validateFiltersForModel($filterData);
+        $queryString = $this->getQueryString($filterData);
+
         $this->setRequest($this->basePath . '/' . $id . $queryString);
-        $this->setHeaders([
-            'token' => $token,
-        ]);
+        $this->setHeaders([]);
+
         if (isset($this->model)) {
             return new $this->model($this->get());
         }
@@ -55,7 +52,6 @@ trait CrudMethods
     }
 
     /**
-     * @param string|null $token
      * @param array       $data
      *
      * @return mixed
@@ -63,12 +59,10 @@ trait CrudMethods
      * @throws ApiEndpointNotFoundException
      * @throws ApiInvalidRequestException
      */
-    public function create(?string $token = null, array $data)
+    public function create(array $data)
     {
         $this->setRequest($this->basePath);
-        $this->setHeaders([
-            'token' => $token,
-        ]);
+        $this->setHeaders([]);
 
         if (isset($this->model)) {
             return new $this->model($this->post($data));
@@ -77,7 +71,6 @@ trait CrudMethods
     }
 
     /**
-     * @param string|null $token
      * @param int         $id
      * @param array       $data
      *
@@ -86,12 +79,10 @@ trait CrudMethods
      * @throws ApiEndpointNotFoundException
      * @throws ApiInvalidRequestException
      */
-    public function update(?string $token = null, int $id, array $data)
+    public function update(int $id, array $data)
     {
         $this->setRequest($this->basePath . '/' . $id);
-        $this->setHeaders([
-            'token' => $token,
-        ]);
+        $this->setHeaders([]);
 
         if (isset($this->model)) {
             return new $this->model($this->put($data));
@@ -119,5 +110,16 @@ trait CrudMethods
             return collect($models);
         }
         return collect($items);
+    }
+
+    /**
+     * @param array|null $filters
+     */
+    private function validateFiltersForModel(?array $filters = null): void
+    {
+        $attributes = $this->getFilterAttributesFromRequest($filters);
+        if ($attributes) {
+            $this->getAPIModel()->validateFilters($attributes);
+        }
     }
 }

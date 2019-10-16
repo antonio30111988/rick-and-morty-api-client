@@ -2,7 +2,9 @@
 
 namespace RickAndMortyApiClient\Services\Api\Exception;
 
-class UnexpectedResponse extends \InvalidArgumentException
+use Exception;
+
+class FilterNotAvailableException extends Exception
 {
 
 }

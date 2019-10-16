@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace RickAndMortyApiClient\Services\Api;
 
@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Validation\ValidationException;
 use RickAndMortyApiClient\Contracts\Api\Api as ApiInterface;
+use RickAndMortyApiClient\Contracts\Api\ApiModel;
 use RickAndMortyApiClient\Services\Api\Exception\{
     ApiConnectionException,
     ApiInvalidRequestException,
@@ -38,6 +39,14 @@ abstract class Api implements ApiInterface
      * @var string
      */
     protected $request;
+    /**
+     * @var ApiModel
+     */
+    protected $model;
+    /**
+     * @var array
+     */
+    protected $filters;
 
     /**
      * @param Client $client
@@ -112,6 +121,8 @@ abstract class Api implements ApiInterface
     public function get()
     {
         try {
+         //   dd($this->request, $this->defaultParameters());
+
             $response = $this->client->get($this->request, $this->defaultParameters());
         } catch (Exception $e) {
             $this->errorHandling($e);
@@ -192,6 +203,14 @@ abstract class Api implements ApiInterface
     }
 
     /**
+     * @return ApiModel
+     */
+    public function getAPIModel(): ApiModel
+    {
+        return app($this->model);
+    }
+
+    /**
      * Return default parameters
      *
      * @return array
@@ -250,17 +269,19 @@ abstract class Api implements ApiInterface
                     }
                     throw ValidationException::withMessages($errors);
                 }
-                if (array_key_exists($contents->error->code, ErrorCodes::MAP_CODE_TO_KEY)) {
-                    $key = ErrorCodes::MAP_CODE_TO_KEY[$contents->error->code];
-                    throw ValidationException::withMessages([
-                        $key => Lang::get('validation.' . $key)
-                    ]);
-                }
                 if ($contents->error->code !== ErrorCodes::UNKNOWN_ERROR) {
                     throw new ApiInvalidRequestException($contents->error);
                 }
             }
         }
         throw $e;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        return $this->getAPIModel()->getFilters();
     }
 }

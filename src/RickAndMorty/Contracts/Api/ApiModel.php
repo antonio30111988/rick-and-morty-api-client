@@ -5,9 +5,10 @@ namespace RickAndMortyApiClient\Contracts\Api;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
+use RickAndMortyApiClient\RickAndMorty\Contracts\Api\Filtering\ApiFilterableProvider;
 use stdClass;
 
-interface ApiModel extends Jsonable, Arrayable, JsonSerializable
+interface ApiModel extends Jsonable, Arrayable, JsonSerializable, ApiFilterableProvider
 {
     /**
      * @param stdClass $data

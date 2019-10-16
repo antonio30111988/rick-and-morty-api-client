@@ -8,16 +8,16 @@ use RickAndMortyApiClient\Services\Api\RickAndMorty\CrudMethods;
 
 class CharacterService extends Api implements CharacterProvider
 {
-    private const REQUEST_URL_V1 = '/v1/character';
+    use CrudMethods;
+
+    private const REQUEST_URL_V1 = '/api/character';
 
     /**
      * @var string
      */
-    private $model = Character::class;
+    protected $model = Character::class;
     /**
      * @var string
      */
     private $basePath = self::REQUEST_URL_V1;
-
-    use CrudMethods;
 }

@@ -2,15 +2,22 @@
 
 namespace RickAndMortyApiClient\Services\Api\RickAndMorty\Locations;
 
-use Carbon\Carbon;
-use stdClass;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Filtering\ApiFilterableService;
 use RickAndMortyApiClient\Contracts\Api\ApiModel;
 use RickAndMortyApiClient\Services\Api\ApiModelTrait;
+use RickAndMortyApiClient\Services\Api\RickAndMorty\Characters\Character;
 
-class Location implements ApiModel
+class Location extends ApiFilterableService implements ApiModel
 {
     use ApiModelTrait;
 
+    public const ENTITY_NAME = 'location';
+
+    public const FILTERABLE_ATTRIBUTES  = [
+        'name',
+        'type',
+        'dimension'
+    ];
 
     /**
      * @var int
@@ -151,5 +158,13 @@ class Location implements ApiModel
     public function setCreated(string $created): void
     {
         $this->created = $created;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCharacterIds(): array
+    {
+        return $this->extractIdsFromModelLink($this->getResidents(), Character::ENTITY_NAME);
     }
 }

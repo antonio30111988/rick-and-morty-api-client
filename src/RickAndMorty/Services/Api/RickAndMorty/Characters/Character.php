@@ -2,14 +2,28 @@
 
 namespace RickAndMortyApiClient\Services\Api\RickAndMorty\Characters;
 
-use Carbon\Carbon;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Exception\InvalidCharacterStatusException;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Filtering\ApiFilterableService;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\RickAndMorty\Characters\Enum\Gender;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\RickAndMorty\Characters\Enum\Status;
+use RickAndMortyApiClient\Services\Api\RickAndMorty\Episodes\Episode;
 use stdClass;
 use RickAndMortyApiClient\Contracts\Api\ApiModel;
 use RickAndMortyApiClient\Services\Api\ApiModelTrait;
 
-class Character implements ApiModel
+class Character extends ApiFilterableService implements ApiModel
 {
     use ApiModelTrait;
+
+    public const ENTITY_NAME = 'character';
+
+    public const FILTERABLE_ATTRIBUTES  = [
+        'name',
+        'status',
+        'species',
+        'type',
+        'gender',
+    ];
 
     /**
      * @var int
@@ -105,6 +119,13 @@ class Character implements ApiModel
      */
     public function setStatus(string $status): void
     {
+       // if (!in_array($status, Status::toArray())) {
+       //     throw new InvalidCharacterStatusException(
+       //         'Unsupported status for character',
+       //         412,
+       //         null
+        //    );
+       // }
         $this->status = $status;
     }
 
@@ -153,6 +174,9 @@ class Character implements ApiModel
      */
     public function setGender(string $gender): void
     {
+      //  if (!in_array($gender, Gender::toArray())) {
+      //      throw new InvalidCharacterStatusException("Unsupported gender for character");
+      //  }
         $this->gender = $gender;
     }
 
@@ -250,5 +274,13 @@ class Character implements ApiModel
     public function setCreated(string $created): void
     {
         $this->created = $created;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEpisodeIds(): array
+    {
+        return $this->extractIdsFromModelLink($this->getEpisode(), Episode::ENTITY_NAME);
     }
 }

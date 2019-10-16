@@ -7,44 +7,40 @@ use Illuminate\Support\Collection;
 interface CrudContract
 {
     /**
-     * @param string|null $token
-     * @param array  $with
-     * @param int    $limit
-     * @param string $sort
+     * @param array|null  $filterData
      *
      * @return Collection
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiConnectionException
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiEndpointNotFoundException
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiInvalidRequestException
+     * @throws \RickAndMortyApiClient\Services\Api\Exception\FilterNotAvailableException
      */
-    public function all(?string $token = null, array $with = [], int $limit = 0, string $sort = ''): Collection;
+    public function all(?array $filterData = null): Collection;
 
     /**
-     * @param string|null $token
      * @param int    $id
-     * @param array  $included
+     * @param array  $filterData
      *
      * @return mixed
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiConnectionException
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiEndpointNotFoundException
      * @throws \RickAndMortyApiClient\Services\Api\Exception\ApiInvalidRequestException
+     * @throws \RickAndMortyApiClient\Services\Api\Exception\FilterNotAvailableException
      */
-    public function show(?string $token = null, int $id, array $included = []);
+    public function show(int $id, ?array $filterData = null);
 
     /**
-     * @param string|null $token
      * @param array  $data
      *
      * @return mixed
      */
-    public function create(?string $token = null, array $data);
+    public function create(array $data);
 
     /**
-     * @param string|null $token
      * @param int    $id
      * @param array  $data
      *
      * @return mixed
      */
-    public function update(?string $token = null, int $id, array $data);
+    public function update(int $id, array $data);
 }

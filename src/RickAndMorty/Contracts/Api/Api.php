@@ -73,4 +73,11 @@ interface Api
      * @return mixed|null
      */
     public function delete();
+
+    /**
+     * Retrieve model class bind to this service
+     *
+     * @return ApiModel
+     */
+    public function getAPIModel(): ApiModel;
 }

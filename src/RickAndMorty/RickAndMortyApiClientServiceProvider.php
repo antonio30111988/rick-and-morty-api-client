@@ -5,6 +5,8 @@ namespace RickAndMortyApiClient;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 use RickAndMortyApiClient\Contracts;
+use RickAndMortyApiClient\RickAndMorty\Contracts\Api\Filtering\ApiFilterableProvider;
+use RickAndMortyApiClient\RickAndMorty\Services\Api\Filtering\ApiFilterableService;
 use RickAndMortyApiClient\Services;
 
 class RickAndMortyApiClientServiceProvider extends ServiceProvider
@@ -46,6 +48,7 @@ class RickAndMortyApiClientServiceProvider extends ServiceProvider
         $this->settings = config('rick-and-morty-api-client.api');
         $this->client = new Client($this->settings['client']);
 
+        //Entity Bindings
         $this->bindService(
             Contracts\Api\RickAndMorty\Characters\CharacterProvider::class,
             Services\Api\RickAndMorty\Characters\CharacterService::class
@@ -57,6 +60,12 @@ class RickAndMortyApiClientServiceProvider extends ServiceProvider
         $this->bindService(
             Contracts\Api\RickAndMorty\Locations\LocationProvider::class,
             Services\Api\RickAndMorty\Locations\LocationService::class
+        );
+
+        //Filterable Interface
+        $this->bindService(
+            ApiFilterableProvider::class,
+            ApiFilterableService::class
         );
     }
 
