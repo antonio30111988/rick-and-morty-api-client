@@ -29,14 +29,13 @@ trait FilterApiTrait
     public function getQueryString(?array $filterData = null): string
     {
         $queryString = '';
-        if ($filterData) {
-           // dd($filterData);
+        if ($filterData) { 
             if (isset($filterData['ids'])) {
-                $queryString .= $this->buildMultipleRecordsFilterQueryString($filterData['ids']);
+                $queryString .= '/' . $this->buildMultipleRecordsFilterQueryString($filterData['ids']);
             } else if (isset($filterData['filters'])) {
-                $queryString .= $this->buildFilterQueryString($filterData['filters']);
+                $queryString .= '?' .$this->buildFilterQueryString($filterData['filters']);
             }
-            return '?' . $queryString;
+            return $queryString;
         }
         return $queryString;
     }
