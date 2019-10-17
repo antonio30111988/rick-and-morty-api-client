@@ -99,8 +99,7 @@ trait ApiModelTrait
     private function extractIdsFromModelLink(array $data, string $entityName): array
     {
         return collect($data)->map(function ($item) use ($entityName) {
-            return (int)str_replace(config('rick-and-morty-api-client.api.client.base_uri') . '/api/' . $entityName ."/", "", $item);
-            //return (int)str_replace("https://rickandmortyapi.com/api/". $entityName ."/", "", $item);
+            return (int)str_replace(config('rick-and-morty-api-client.api.client.base_uri')  . $entityName . "/", "", $item);
         })->toArray();
     }
 }
