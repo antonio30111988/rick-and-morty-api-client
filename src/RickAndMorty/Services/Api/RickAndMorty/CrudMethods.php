@@ -23,10 +23,14 @@ trait CrudMethods
     {
         $this->validateFiltersForModel($filterData);
         $queryString = $this->getQueryString($filterData);
-
         $this->setRequest($this->basePath . $queryString);
         $this->setHeaders([]);
-        return $this->buildFromArray($this->get()->results);
+
+        return $this->buildFromArray(
+            (isset($this->get()->results)) ?
+                $this->get()->results :
+                $this->get()
+        );
     }
 
     /**
